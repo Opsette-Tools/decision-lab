@@ -1,0 +1,68 @@
+/* Run history. Reuses the .dl-list / .dl-row primitives from rubrics.css. */
+
+.dl-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-2xl);
+}
+
+.dl-history-group .dl-section-head {
+  margin-bottom: var(--ops-space-md);
+}
+
+.dl-history-actions {
+  gap: var(--ops-space-sm);
+}
+
+/* The score column. Tabular figures and a fixed min-width so the numbers line
+   up vertically down a group — comparing nine runs is the point, and ragged
+   numbers defeat the scan. */
+.dl-history-score {
+  font-size: var(--ops-fs-sub);
+  font-weight: 800;
+  letter-spacing: var(--ops-tracking-tight);
+  font-variant-numeric: tabular-nums;
+  min-width: 3.4ch;
+  text-align: right;
+  color: var(--ops-text);
+}
+
+.dl-history-score[data-state="pass"] {
+  color: var(--ops-pass-fg);
+}
+
+.dl-history-score[data-state="warn"] {
+  color: var(--ops-warn-fg);
+}
+
+.dl-history-score[data-state="fail"] {
+  color: var(--ops-fail-fg);
+}
+
+.dl-history-score[data-state="disqualified"] {
+  color: var(--ops-dq-fg);
+}
+
+.dl-history-open {
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+  font-style: italic;
+}
+
+/* Phone: keep the score and state pill on one line with the kebab, and drop the
+   redundant "In progress" text — the filter and the row meta already say it.
+   The blocker pill stays: it is the one thing worth seeing from the list. */
+@media (max-width: 599px) {
+  .dl-history-actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .dl-history-score {
+    text-align: left;
+  }
+
+  .dl-history-open {
+    display: none;
+  }
+}

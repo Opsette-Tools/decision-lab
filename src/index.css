@@ -1,0 +1,73 @@
+/* Base document styles. Everything sizing-related comes from tokens.css —
+   this file only sets the document-level defaults that have nowhere else to
+   live. */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: var(--ops-fs-body);
+  color: var(--ops-text);
+  background: var(--ops-surface-sunken);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* iOS: stop the rubber-band scroll from revealing a white strip under the
+     dark header when the page is short. */
+  overscroll-behavior-y: none;
+}
+
+/* Page title / heading rhythm. Type carries the design in this app, so the
+   headings get real tracking rather than AntD's defaults. */
+.dl-h1 {
+  font-size: var(--ops-fs-h1);
+  font-weight: 800;
+  letter-spacing: var(--ops-tracking-tight);
+  line-height: 1.12;
+  margin: 0;
+  color: var(--ops-text);
+}
+
+.dl-h2 {
+  font-size: var(--ops-fs-h2);
+  font-weight: 700;
+  letter-spacing: var(--ops-tracking-tight);
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ops-text);
+}
+
+/* An eyebrow — small, spaced, uppercase. Used above a page title instead of a
+   subtitle-under-headline, which is the generic-hero shape we avoid. */
+.dl-eyebrow {
+  font-size: var(--ops-fs-fine);
+  font-weight: 600;
+  letter-spacing: var(--ops-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ops-text-muted);
+  margin: 0 0 var(--ops-space-xs);
+}
+
+.dl-muted {
+  color: var(--ops-text-muted);
+}
+
+/* Respect a reduced-motion preference everywhere, including the wheel spin
+   that will land here later. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

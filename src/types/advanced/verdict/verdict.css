@@ -1,0 +1,225 @@
+/**
+ * Verdict surfaces. Every color here resolves through a --ops-<state>-* token
+ * (tokens.css), so a state change is a single data attribute and light/dark is
+ * handled by the token layer rather than by any component.
+ *
+ * `data-state` takes one of: pass | warn | fail | disqualified.
+ */
+
+.dl-state {
+  --dl-fg: var(--ops-warn-fg);
+  --dl-bg: var(--ops-warn-bg);
+  --dl-border: var(--ops-warn-border);
+}
+
+.dl-state[data-state="pass"] {
+  --dl-fg: var(--ops-pass-fg);
+  --dl-bg: var(--ops-pass-bg);
+  --dl-border: var(--ops-pass-border);
+}
+
+.dl-state[data-state="warn"] {
+  --dl-fg: var(--ops-warn-fg);
+  --dl-bg: var(--ops-warn-bg);
+  --dl-border: var(--ops-warn-border);
+}
+
+.dl-state[data-state="fail"] {
+  --dl-fg: var(--ops-fail-fg);
+  --dl-bg: var(--ops-fail-bg);
+  --dl-border: var(--ops-fail-border);
+}
+
+.dl-state[data-state="disqualified"] {
+  --dl-fg: var(--ops-dq-fg);
+  --dl-bg: var(--ops-dq-bg);
+  --dl-border: var(--ops-dq-border);
+}
+
+/* ---- The pinned verdict panel -------------------------------------------- */
+
+.dl-verdict {
+  background: var(--dl-bg);
+  border: 1px solid var(--dl-border);
+  border-radius: var(--ops-radius-lg);
+  padding: var(--ops-card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+  /* A disqualified run gets a heavier left edge — the surface itself changes
+     state, it isn't just a badge swap. */
+  box-shadow: inset 3px 0 0 var(--dl-border);
+}
+
+.dl-verdict[data-state="disqualified"] {
+  box-shadow: inset 5px 0 0 var(--dl-fg);
+}
+
+.dl-verdict-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ops-space-md);
+  flex-wrap: wrap;
+}
+
+.dl-verdict-number {
+  font-size: var(--ops-fs-verdict);
+  font-weight: 800;
+  letter-spacing: var(--ops-tracking-tight);
+  line-height: 1;
+  color: var(--dl-fg);
+  /* Tabular figures so the number doesn't jitter horizontally as it changes
+     mid-call — a shifting score reads as instability. */
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-verdict-number[data-unscored="true"] {
+  color: var(--ops-text-muted);
+}
+
+.dl-verdict-label {
+  font-size: var(--ops-fs-sub);
+  font-weight: 700;
+  letter-spacing: var(--ops-tracking-tight);
+  color: var(--dl-fg);
+  text-align: right;
+}
+
+.dl-verdict-meta {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ops-space-sm) var(--ops-space-lg);
+}
+
+/* The bar is a secondary read — the number and the label carry the verdict. */
+.dl-verdict-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--dl-border) 45%, transparent);
+  overflow: hidden;
+}
+
+.dl-verdict-bar-fill {
+  height: 100%;
+  background: var(--dl-fg);
+  border-radius: 999px;
+  transition: width 220ms ease;
+}
+
+/* ---- Disqualification callout -------------------------------------------- */
+
+.dl-dq {
+  background: var(--ops-dq-bg);
+  border: 1px solid var(--ops-dq-border);
+  border-radius: var(--ops-radius);
+  padding: var(--ops-space-md) var(--ops-space-lg);
+  display: flex;
+  gap: var(--ops-space-md);
+  align-items: flex-start;
+}
+
+.dl-dq-icon {
+  color: var(--ops-dq-fg);
+  font-size: 18px;
+  line-height: 1.4;
+  flex: 0 0 auto;
+}
+
+.dl-dq-title {
+  font-weight: 700;
+  color: var(--ops-dq-fg);
+  font-size: var(--ops-fs-body);
+}
+
+.dl-dq-body {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text);
+  margin-top: 2px;
+}
+
+/* ---- Blocker list -------------------------------------------------------- */
+
+.dl-blockers {
+  background: var(--ops-block-bg);
+  border: 1px solid var(--ops-block-border);
+  border-radius: var(--ops-radius);
+  padding: var(--ops-space-lg);
+}
+
+.dl-blockers-head {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  font-size: var(--ops-fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ops-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ops-block-fg);
+  margin-bottom: var(--ops-space-md);
+}
+
+.dl-blockers-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+}
+
+.dl-blocker {
+  display: flex;
+  gap: var(--ops-space-sm);
+  font-size: var(--ops-fs-body);
+  color: var(--ops-text);
+  line-height: 1.45;
+}
+
+.dl-blocker::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ops-block-fg);
+  margin-top: 0.55em;
+}
+
+.dl-blocker-source {
+  display: block;
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+  margin-top: 2px;
+}
+
+.dl-blockers-empty {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+}
+
+/* ---- Small inline state pill (list rows, history) ------------------------ */
+
+.dl-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--dl-bg);
+  border: 1px solid var(--dl-border);
+  color: var(--dl-fg);
+  font-size: var(--ops-fs-fine);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dl-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 auto;
+}

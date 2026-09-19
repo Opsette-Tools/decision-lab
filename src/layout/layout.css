@@ -1,0 +1,169 @@
+/* App chrome layout. All sizing reads from tokens.css. */
+
+.dl-layout {
+  min-height: 100vh;
+  background: var(--ops-surface-sunken);
+}
+
+/* The header is sticky at 60px (see header.css); the body fills what's left. */
+.dl-body {
+  background: var(--ops-surface-sunken);
+}
+
+/* ---- Left rail ----------------------------------------------------------- */
+
+.dl-nav {
+  flex: 0 0 auto;
+  width: var(--ops-sidebar-w);
+  background: var(--ops-surface);
+  border-right: 1px solid var(--ops-border);
+  padding: var(--ops-space-md) var(--ops-space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+  /* Sticks under the 60px header and owns the full remaining height, so the
+     rail never ends mid-page with a gap below it. */
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  transition: width 160ms ease;
+}
+
+.dl-nav[data-collapsed="true"] {
+  width: var(--ops-sidebar-w-collapsed);
+}
+
+.dl-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+}
+
+.dl-nav-item,
+.dl-nav-collapse {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-md);
+  width: 100%;
+  padding: 10px var(--ops-space-md);
+  border: 0;
+  background: transparent;
+  border-radius: var(--ops-radius);
+  color: var(--ops-text-muted);
+  font-size: var(--ops-fs-body);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.dl-nav-item:hover,
+.dl-nav-collapse:hover {
+  background: var(--ops-surface-sunken);
+  color: var(--ops-text);
+}
+
+/* react-router adds .active to the matching NavLink. The left bar is the
+   affordance — a filled pill would fight the editorial, low-chrome look. */
+.dl-nav-item.active {
+  color: var(--ops-header-accent);
+  background: var(--ops-surface-sunken);
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--ops-header-accent);
+}
+
+.dl-nav-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.dl-nav-label {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Collapsed: the label stays in the DOM as the link's accessible name, but
+   takes no space. `width: 0` rather than `display: none` keeps it readable to
+   assistive tech. */
+.dl-nav[data-collapsed="true"] .dl-nav-label {
+  width: 0;
+  opacity: 0;
+}
+
+.dl-nav[data-collapsed="true"] .dl-nav-item,
+.dl-nav[data-collapsed="true"] .dl-nav-collapse {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 0;
+}
+
+.dl-nav-collapse {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--ops-border);
+  border-radius: 0;
+  padding-top: var(--ops-space-md);
+  margin-top: auto;
+  font-size: var(--ops-fs-caption);
+}
+
+/* ---- Main column --------------------------------------------------------- */
+
+.dl-main {
+  background: var(--ops-surface-sunken);
+  min-width: 0; /* let long content shrink instead of forcing a page scrollbar */
+}
+
+.dl-content {
+  width: 100%;
+  max-width: var(--ops-page-max);
+  margin: 0 auto;
+  padding: var(--ops-space-xl) var(--ops-page-pad) var(--ops-space-2xl);
+}
+
+.dl-nav-trigger {
+  margin-bottom: var(--ops-space-sm);
+  margin-left: calc(var(--ops-space-sm) * -1);
+}
+
+/* ---- Header button ------------------------------------------------------- */
+
+.dl-header-btn {
+  color: #fff;
+}
+
+.dl-header-btn:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ---- Footer -------------------------------------------------------------- */
+
+.dl-footer {
+  background: transparent;
+  padding: var(--ops-space-xl) var(--ops-page-pad) var(--ops-space-xl);
+  border-top: 1px solid var(--ops-border);
+}
+
+.dl-footer-inner {
+  max-width: var(--ops-page-max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ops-space-md);
+}
+
+.dl-footer-links {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  font-size: var(--ops-fs-caption);
+}

@@ -1,0 +1,186 @@
+/**
+ * Global design tokens for Decision Lab.
+ *
+ * One place to tune sizing for the whole app. Components reference these
+ * variables instead of hardcoding pixels inline, so the page scales as one
+ * coherent system rather than a grab-bag of magic numbers. No component
+ * should ever contain a literal `fontSize: 14` — if a size is needed and
+ * isn't here, add it here first.
+ *
+ * Sizes use clamp(MIN, PREFERRED, MAX) so they grow smoothly between phone
+ * and desktop — no janky jumps at a breakpoint. The middle vw-based term is
+ * what does the fluid scaling; the outer two clamp it so it never gets
+ * comically small on a watch or huge on a 4K monitor.
+ */
+:root {
+  /* ---- Page container ---------------------------------------------------- */
+  --ops-page-max: 1240px;
+  /* Horizontal page gutter: 20px on a phone → 28px on desktop. */
+  --ops-page-pad: clamp(20px, 5vw, 28px);
+
+  /* ---- Spacing scale ----------------------------------------------------- */
+  /* A small, consistent ramp. Fixed (not fluid) so rhythm stays predictable;
+     the page gutter above is the one piece that needs to breathe. */
+  --ops-space-xs: 4px;
+  --ops-space-sm: 8px;
+  --ops-space-md: 12px;
+  --ops-space-lg: 16px;
+  --ops-space-xl: 24px;
+  --ops-space-2xl: 40px;
+
+  /* Vertical block gap between stacked sections. */
+  --ops-grid-gap: clamp(16px, 3vw, 24px);
+
+  /* ---- Fluid type scale -------------------------------------------------- */
+  /* Tuned to read BIG on a phone (the high end of each clamp is reached at
+     small widths via the vw term) and settle to comfortable desktop sizes.
+     Deliberately larger than AntD's defaults — that's the point. */
+  --ops-fs-fine: clamp(12px, 3vw, 13px);      /* fine print / hints */
+  --ops-fs-caption: clamp(13px, 3.4vw, 14px); /* secondary labels, meta */
+  --ops-fs-body: clamp(15px, 4vw, 16px);      /* body copy, list rows */
+  --ops-fs-label: clamp(15px, 4vw, 16px);     /* form field labels */
+  --ops-fs-sub: clamp(16px, 4.4vw, 18px);     /* intro copy / section sub */
+  --ops-fs-criterion: clamp(17px, 4.6vw, 19px); /* the criterion question in run mode */
+  --ops-fs-h2: clamp(20px, 5.2vw, 24px);      /* section heading */
+  --ops-fs-h1: clamp(26px, 6.4vw, 32px);      /* page title */
+  --ops-fs-verdict: clamp(34px, 10vw, 44px);  /* the live score percentage */
+
+  /* ---- Display type ------------------------------------------------------ */
+  /* Editorial weight for page titles and the verdict number. Type carries the
+     design here — see the family visual standard. */
+  --ops-tracking-tight: -0.02em;
+  --ops-tracking-wide: 0.08em;
+
+  /* ---- Brand palette (single source so components never re-derive) ------- */
+  --ops-green: #2f4f46;
+  --ops-green-light: #426f62;
+  --ops-gold: #cfae60;
+
+  /* ---- Verdict states ---------------------------------------------------- */
+  /* Decision Lab's one distinctive visual need: a run is always in exactly one
+     of four states, and that state must be legible at a glance from across a
+     desk while on a call. Each state gets a fill, a border, and a text color
+     so a surface can take on the state wholesale, not just tint a badge.
+     Deliberately NOT AntD's default success/warning/error — those read as
+     form-validation feedback, and this is a verdict. */
+  --ops-pass-fg: #1f6b4f;
+  --ops-pass-bg: rgba(31, 107, 79, 0.08);
+  --ops-pass-border: rgba(31, 107, 79, 0.28);
+
+  --ops-warn-fg: #9a6b16;
+  --ops-warn-bg: rgba(207, 174, 96, 0.14);
+  --ops-warn-border: rgba(154, 107, 22, 0.3);
+
+  --ops-fail-fg: #9a3324;
+  --ops-fail-bg: rgba(154, 51, 36, 0.07);
+  --ops-fail-border: rgba(154, 51, 36, 0.26);
+
+  /* Disqualified is its own state, not a darker "fail" — it means the run is
+     over, and the surface says so loudly. */
+  --ops-dq-fg: #7a1f1f;
+  --ops-dq-bg: rgba(122, 31, 31, 0.1);
+  --ops-dq-border: rgba(122, 31, 31, 0.42);
+
+  /* A blocker is not a failure — it's a condition of delivery. Distinct from
+     warn so an accumulating blocker list never reads as "something is wrong". */
+  --ops-block-fg: #7c5514;
+  --ops-block-bg: rgba(207, 174, 96, 0.1);
+  --ops-block-border: rgba(124, 85, 20, 0.24);
+
+  /* ---- Radius ------------------------------------------------------------ */
+  --ops-radius-sm: 6px;
+  --ops-radius: 8px;
+  --ops-radius-lg: 12px;
+
+  /* ---- Card interior padding (breathing room inside cards) --------------- */
+  --ops-card-pad: clamp(16px, 5vw, 24px);
+
+  /* ---- Surfaces ---------------------------------------------------------- */
+  --ops-surface: #ffffff;
+  --ops-surface-sunken: #f6f7f6;
+  --ops-border: #e6e8e6;
+  --ops-text: #1a1a1a;
+  --ops-text-muted: #6b6f6b;
+
+  /* ---- Sidebar ----------------------------------------------------------- */
+  --ops-sidebar-w: 248px;
+  --ops-sidebar-w-collapsed: 72px;
+
+  /* ---- Header accent (family dark-mode pattern) -------------------------- */
+  --ops-header-accent: var(--ops-green);
+}
+
+/**
+ * Dark mode. Dual cascade — both the `.dark` class and the `data-theme`
+ * attribute are set by the theme provider, and the family pattern is to honor
+ * either one so a component never has to care which lever moved.
+ */
+html.dark,
+html[data-theme="dark"] {
+  --ops-surface: #141716;
+  --ops-surface-sunken: #0d0f0e;
+  --ops-border: #2a2e2c;
+  --ops-text: #f2f3f2;
+  --ops-text-muted: #9aa09c;
+
+  --ops-header-accent: #E4C49A;
+
+  /* Verdict states, re-tuned for a dark surface: the foreground lifts to stay
+     readable and the fills get more opaque so they still register as a state
+     change rather than a barely-visible tint. */
+  --ops-pass-fg: #6ed3a5;
+  --ops-pass-bg: rgba(110, 211, 165, 0.12);
+  --ops-pass-border: rgba(110, 211, 165, 0.32);
+
+  --ops-warn-fg: #e6c879;
+  --ops-warn-bg: rgba(230, 200, 121, 0.12);
+  --ops-warn-border: rgba(230, 200, 121, 0.3);
+
+  --ops-fail-fg: #f0928a;
+  --ops-fail-bg: rgba(240, 146, 138, 0.1);
+  --ops-fail-border: rgba(240, 146, 138, 0.3);
+
+  --ops-dq-fg: #ff9e94;
+  --ops-dq-bg: rgba(255, 158, 148, 0.13);
+  --ops-dq-border: rgba(255, 158, 148, 0.5);
+
+  --ops-block-fg: #e0c68f;
+  --ops-block-bg: rgba(224, 198, 143, 0.09);
+  --ops-block-border: rgba(224, 198, 143, 0.26);
+}
+
+/**
+ * Mobile control polish — the parts that legitimately belong in CSS.
+ *
+ * IMPORTANT: control HEIGHT is NOT set here. Forcing height on AntD controls
+ * with CSS breaks their internal box model. Height is set the correct way —
+ * through AntD's `controlHeight` theme token in theme.tsx — so each control
+ * computes its own internal layout at the larger size.
+ */
+@media (max-width: 767px) {
+  /* iOS Safari auto-zooms the page when a focused input's font-size is below
+     16px — the classic "page jumps when I tap a field" bug. 16px kills it. */
+  .ant-input,
+  .ant-input-affix-wrapper input,
+  .ant-input-number-input,
+  .ant-select-selection-search-input,
+  .ant-select-selection-item {
+    font-size: 16px !important;
+  }
+
+  /* Visible press feedback — the control dips the instant you touch it, so a
+     tap is unmistakably registered even on iOS where there's no vibration. */
+  .ant-btn:active,
+  .ant-select-selector:active,
+  .ant-input:active,
+  .ant-input-number:active {
+    transform: scale(0.985);
+    transition: transform 60ms ease;
+  }
+
+  /* Give cards real breathing room inside on phones — the default padding
+     reads cramped once the type is larger. */
+  .ant-card-body {
+    padding: var(--ops-card-pad);
+  }
+}

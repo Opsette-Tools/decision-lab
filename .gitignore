@@ -1,0 +1,9 @@
+node_modules
+dist
+dist-ssr
+build.log
+*.local
+*.tsbuildinfo
+.DS_Store
+.vscode/*
+!.vscode/extensions.json

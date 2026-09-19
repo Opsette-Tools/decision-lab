@@ -1,0 +1,214 @@
+/* Run-mode question rows and answer buttons. */
+
+.dl-qrow {
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius-lg);
+  padding: var(--ops-card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+  transition: border-color 140ms ease;
+}
+
+/* An answered row recedes slightly — the eye should land on what is still
+   open, not on what is done. */
+.dl-qrow[data-answered="true"] {
+  border-color: var(--ops-border);
+  background: var(--ops-surface);
+}
+
+.dl-qrow[data-answered="false"] {
+  border-color: var(--ops-border);
+}
+
+/* A row holding the dealbreaker takes the state itself, so the cause is
+   findable without hunting once the top panel says "no". */
+.dl-qrow[data-dq="true"] {
+  border-color: var(--ops-dq-border);
+  box-shadow: inset 3px 0 0 var(--ops-dq-fg);
+}
+
+.dl-qrow-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ops-space-md);
+}
+
+.dl-qrow-num {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ops-surface-sunken);
+  border: 1px solid var(--ops-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ops-fs-caption);
+  font-weight: 700;
+  color: var(--ops-text-muted);
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+.dl-qrow[data-answered="true"] .dl-qrow-num {
+  background: var(--ops-header-accent);
+  border-color: var(--ops-header-accent);
+  color: #fff;
+}
+
+.dl-qrow-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The question is the largest thing in the row. It is what gets read aloud. */
+.dl-qrow-label {
+  font-size: var(--ops-fs-criterion);
+  font-weight: 650;
+  letter-spacing: var(--ops-tracking-tight);
+  line-height: 1.3;
+  margin: 0;
+  color: var(--ops-text);
+}
+
+/* The hint sits directly under the question, where the eye already is —
+   not in a tooltip, which would cost a hover the operator does not have. */
+.dl-qrow-hint {
+  margin: var(--ops-space-xs) 0 0;
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  line-height: 1.45;
+}
+
+.dl-qrow-clear {
+  flex: 0 0 auto;
+  color: var(--ops-text-muted);
+}
+
+/* ---- Answer buttons ------------------------------------------------------- */
+
+/* Wrapping row, not a grid: option labels are real phrases of uneven length,
+   and a fixed grid would either truncate them or leave dead space. */
+.dl-qrow-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ops-space-sm);
+}
+
+.dl-answer {
+  flex: 1 1 auto;
+  /* Wide enough that a two-word answer never wraps, narrow enough that three
+     still fit on one desktop line. */
+  min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ops-space-sm);
+  /* 44px minimum — a real thumb target, tapped mid-conversation. */
+  min-height: 44px;
+  padding: var(--ops-space-sm) var(--ops-space-md);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  background: var(--ops-surface-sunken);
+  color: var(--ops-text);
+  font: inherit;
+  font-size: var(--ops-fs-body);
+  font-weight: 550;
+  line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.dl-answer:hover:not(:disabled) {
+  border-color: var(--ops-header-accent);
+}
+
+.dl-answer:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.dl-answer:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* Selected: solid fill. At a glance, from across a desk, the chosen answer has
+   to be unmistakable — an outline is not enough. */
+.dl-answer[data-selected="true"] {
+  background: var(--ops-green);
+  border-color: var(--ops-green);
+  color: #fff;
+}
+
+html.dark .dl-answer[data-selected="true"],
+html[data-theme="dark"] .dl-answer[data-selected="true"] {
+  background: var(--ops-header-accent);
+  border-color: var(--ops-header-accent);
+  color: #14110c;
+}
+
+/* A dealbreaker answer is marked before it is tapped, and turns the full
+   disqualified color once it is. */
+.dl-answer[data-dq="true"] {
+  border-color: var(--ops-dq-border);
+}
+
+.dl-answer[data-dq="true"][data-selected="true"] {
+  background: var(--ops-dq-fg);
+  border-color: var(--ops-dq-fg);
+  color: #fff;
+}
+
+.dl-answer[data-block="true"][data-selected="true"]:not([data-dq="true"]) {
+  background: var(--ops-block-fg);
+  border-color: var(--ops-block-fg);
+  color: #fff;
+}
+
+.dl-answer-flag {
+  flex: 0 0 auto;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.dl-answer[data-selected="true"] .dl-answer-flag {
+  opacity: 1;
+}
+
+.dl-answer-flag[data-kind="dq"] {
+  color: var(--ops-dq-fg);
+}
+
+.dl-answer-flag[data-kind="block"] {
+  color: var(--ops-block-fg);
+}
+
+.dl-answer[data-selected="true"] .dl-answer-flag[data-kind="dq"],
+.dl-answer[data-selected="true"] .dl-answer-flag[data-kind="block"] {
+  color: currentColor;
+}
+
+.dl-qrow-skip {
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+}
+
+/* Phone: answers go full-width and stack. Three side-by-side buttons at 375px
+   are three truncated buttons, and a truncated answer is unreadable mid-call —
+   so the deliberate choice is one answer per line, full width, easy to hit. */
+@media (max-width: 599px) {
+  .dl-answer {
+    flex: 1 1 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    text-align: left;
+    min-height: 48px;
+  }
+
+  .dl-answer-flag {
+    margin-left: auto;
+  }
+}

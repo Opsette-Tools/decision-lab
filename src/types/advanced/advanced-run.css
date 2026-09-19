@@ -1,0 +1,150 @@
+/* Run mode layout. */
+
+.dl-run-head {
+  margin-bottom: var(--ops-space-xl);
+}
+
+.dl-run-head-text .dl-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ops-space-md);
+}
+
+.dl-run-done-tag {
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ops-pass-fg);
+}
+
+/* Two columns on desktop: questions on the left, verdict pinned right. The
+   verdict column is narrow on purpose — it holds a number, a state and a list,
+   and giving it more room would only spread them out. */
+.dl-run-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--ops-grid-gap);
+  align-items: start;
+}
+
+.dl-run-questions {
+  min-width: 0;
+}
+
+.dl-run-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+}
+
+.dl-run-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ops-space-md);
+  margin-top: var(--ops-space-xl);
+}
+
+/* ---- The pinned verdict column ------------------------------------------- */
+
+.dl-run-side {
+  min-width: 0;
+}
+
+/* Sticky under the 60px header, so the verdict never scrolls away no matter how
+   long the question list is. This is the single most important behavior on the
+   page: the whole design assumption is that the operator cannot look away, and
+   a verdict you have to scroll to find fails that. */
+.dl-run-side-sticky {
+  position: sticky;
+  top: calc(60px + var(--ops-space-lg));
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+}
+
+.dl-run-notes-preview {
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  padding: var(--ops-space-md) var(--ops-space-lg);
+}
+
+.dl-run-notes-label {
+  font-size: var(--ops-fs-fine);
+  font-weight: 700;
+  letter-spacing: var(--ops-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ops-text-muted);
+}
+
+.dl-run-notes-preview p {
+  margin: var(--ops-space-xs) 0 0;
+  font-size: var(--ops-fs-caption);
+  line-height: 1.5;
+  color: var(--ops-text);
+  white-space: pre-wrap;
+}
+
+.dl-run-snapshot-note {
+  margin: 0;
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+  line-height: 1.45;
+}
+
+/* ---- Tablet: single column, verdict on top ------------------------------- */
+
+@media (max-width: 991px) {
+  .dl-run-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The verdict moves ABOVE the questions rather than below them — on a narrow
+     screen the first thing on the page has to be the state, and a verdict under
+     eight questions would never be seen. */
+  .dl-run-side {
+    order: -1;
+  }
+
+  .dl-run-side-sticky {
+    position: sticky;
+    top: 60px;
+    /* Lift above the question rows so a scrolled row never bleeds through the
+       translucent verdict fill. */
+    z-index: 5;
+    /* A backdrop so the sticky panel reads as a bar over the page rather than
+       floating text once content scrolls under it. */
+    background: var(--ops-surface-sunken);
+    padding-block: var(--ops-space-sm);
+    margin-block: calc(var(--ops-space-sm) * -1);
+  }
+
+  /* On a phone the blocker list and the provenance note are NOT what needs to
+     be stuck to the top — only the verdict itself. They stay in the flow,
+     reachable by scrolling, so the sticky bar stays one glance tall instead of
+     eating half the screen. */
+  .dl-run-side-sticky .dl-blockers,
+  .dl-run-side-sticky .dl-run-notes-preview,
+  .dl-run-side-sticky .dl-run-snapshot-note {
+    position: static;
+  }
+}
+
+/* ---- Phone: trim the verdict panel to what matters mid-call -------------- */
+
+@media (max-width: 599px) {
+  /* The weighted-points line is the first thing to go: it is the arithmetic,
+     and the arithmetic is a desk-review concern, not a live-call one. The
+     percentage and the state label carry the whole read on a phone. */
+  .dl-verdict-meta span + span {
+    display: none;
+  }
+
+  .dl-run-footer-actions .ant-btn {
+    flex: 1 1 100%;
+  }
+}

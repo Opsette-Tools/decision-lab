@@ -1,0 +1,146 @@
+/* Scorecard library + shared page-head / list patterns.
+   Reused by the history page, so these are the family list primitives rather
+   than page-specific one-offs. */
+
+.dl-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ops-space-lg);
+  flex-wrap: wrap;
+  margin-bottom: var(--ops-space-xl);
+}
+
+.dl-loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--ops-space-2xl) 0;
+}
+
+/* ---- Empty state --------------------------------------------------------- */
+
+.dl-empty-panel {
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius-lg);
+  padding: var(--ops-space-2xl) var(--ops-card-pad);
+}
+
+.dl-empty-copy {
+  max-width: 48ch;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dl-empty-copy p {
+  margin: var(--ops-space-md) 0 0;
+  font-size: var(--ops-fs-body);
+  line-height: 1.55;
+}
+
+/* ---- List rows ----------------------------------------------------------- */
+
+.dl-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius-lg);
+  overflow: hidden;
+}
+
+.dl-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-md);
+  padding: var(--ops-space-lg) var(--ops-card-pad);
+  border-bottom: 1px solid var(--ops-border);
+}
+
+.dl-row:last-child {
+  border-bottom: 0;
+}
+
+.dl-row:hover {
+  background: var(--ops-surface-sunken);
+}
+
+/* The row body is the edit affordance — a whole-row target rather than a small
+   link, so it's reachable with a thumb. */
+.dl-row-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.dl-row-name {
+  font-size: var(--ops-fs-sub);
+  font-weight: 650;
+  letter-spacing: var(--ops-tracking-tight);
+  color: var(--ops-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dl-row-meta {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.dl-row-sep {
+  opacity: 0.5;
+}
+
+.dl-row-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-xs);
+}
+
+/* Phone: the row becomes two stacked bands so the Run button keeps a full-width
+   tap target instead of being squeezed next to a truncated name. Deliberate —
+   Run is the reason you're on this screen. */
+@media (max-width: 599px) {
+  .dl-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ops-space-md);
+  }
+
+  .dl-row-name {
+    white-space: normal;
+  }
+
+  .dl-row-actions {
+    justify-content: space-between;
+  }
+
+  .dl-row-actions .ant-btn-background-ghost {
+    flex: 1 1 auto;
+  }
+}
+
+/* Type badge on a library row. Small and quiet — it labels the row, it is not
+   the row's subject. */
+.dl-type-tag.ant-tag {
+  font-size: var(--ops-fs-fine);
+  font-weight: 500;
+  margin-inline-end: 2px;
+  line-height: 1.5;
+}

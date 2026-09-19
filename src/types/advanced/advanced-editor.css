@@ -1,0 +1,104 @@
+/* Scorecard editor page shell. Row-level styling lives in editor-parts.css. */
+
+.dl-editor-title {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.dl-editor-title .dl-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-md);
+}
+
+/* Save state sits beside the eyebrow rather than in a toast — persistent,
+   quiet, and never in the way. There is no Save button by design. */
+.dl-save-state {
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ops-text-muted);
+  opacity: 0.75;
+}
+
+/* The title is an input that reads as a heading — editing in place, with no
+   separate rename affordance. */
+.dl-title-input.ant-input {
+  font-size: var(--ops-fs-h1);
+  font-weight: 800;
+  letter-spacing: var(--ops-tracking-tight);
+  line-height: 1.14;
+  padding: 0;
+  color: var(--ops-text);
+}
+
+.dl-title-input.ant-input::placeholder {
+  color: var(--ops-text-muted);
+  opacity: 0.55;
+}
+
+.dl-desc-input.ant-input {
+  margin-top: calc(var(--ops-space-xl) * -1 + var(--ops-space-sm));
+  margin-bottom: var(--ops-space-xl);
+  font-size: var(--ops-fs-sub);
+  line-height: 1.5;
+  background: transparent;
+  border-color: transparent;
+  padding-inline: 0;
+  resize: none;
+}
+
+.dl-desc-input.ant-input:hover,
+.dl-desc-input.ant-input:focus {
+  background: var(--ops-surface);
+  border-color: var(--ops-border);
+  padding-inline: var(--ops-space-md);
+}
+
+/* ---- Sections ------------------------------------------------------------ */
+
+.dl-section {
+  margin-top: var(--ops-space-2xl);
+}
+
+.dl-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ops-space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--ops-space-lg);
+  padding-bottom: var(--ops-space-sm);
+  border-bottom: 1px solid var(--ops-border);
+}
+
+.dl-section-meta {
+  font-size: var(--ops-fs-caption);
+}
+
+.dl-criteria {
+  list-style: none;
+  margin: 0 0 var(--ops-space-md);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-editor-empty {
+  background: var(--ops-surface);
+  border: 1px dashed var(--ops-border);
+  border-radius: var(--ops-radius);
+  padding: var(--ops-card-pad);
+  margin-bottom: var(--ops-space-md);
+}
+
+.dl-editor-empty p {
+  margin: 0;
+  max-width: 62ch;
+  line-height: 1.55;
+}
+
+.dl-add-criterion {
+  margin-top: var(--ops-space-sm);
+}

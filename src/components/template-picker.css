@@ -1,0 +1,49 @@
+/* Template rows, shown after a type is chosen. */
+
+.dl-templatelist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-template {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--ops-space-md) var(--ops-space-lg);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  background: var(--ops-surface);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.dl-template:hover {
+  border-color: var(--ops-header-accent);
+  background: var(--ops-surface-sunken);
+}
+
+.dl-template-name {
+  font-size: var(--ops-fs-body);
+  font-weight: 650;
+  color: var(--ops-text);
+}
+
+.dl-template-blurb {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  line-height: 1.45;
+}
+
+.dl-template-blank {
+  margin-top: var(--ops-space-lg);
+  padding-top: var(--ops-space-md);
+  border-top: 1px solid var(--ops-border);
+  text-align: center;
+}

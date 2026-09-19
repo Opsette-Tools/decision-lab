@@ -1,0 +1,97 @@
+/* Scorecard type chooser rows. */
+
+.dl-typelist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+}
+
+.dl-typecard {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ops-space-lg);
+  padding: var(--ops-space-lg);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  background: var(--ops-surface);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.dl-typecard:hover:not(:disabled) {
+  border-color: var(--ops-header-accent);
+  background: var(--ops-surface-sunken);
+}
+
+.dl-typecard:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.dl-typecard-icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ops-radius);
+  background: var(--ops-surface-sunken);
+  border: 1px solid var(--ops-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--ops-header-accent);
+}
+
+.dl-typecard-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dl-typecard-name {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  font-size: var(--ops-fs-sub);
+  font-weight: 650;
+  letter-spacing: var(--ops-tracking-tight);
+  color: var(--ops-text);
+}
+
+.dl-typecard-tag {
+  font-size: var(--ops-fs-fine);
+  font-weight: 500;
+  margin: 0;
+}
+
+.dl-typecard-blurb {
+  font-size: var(--ops-fs-body);
+  color: var(--ops-text);
+  line-height: 1.45;
+}
+
+.dl-typecard-detail {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 599px) {
+  .dl-typecard {
+    gap: var(--ops-space-md);
+    padding: var(--ops-space-md);
+  }
+
+  /* The icon is decoration; at 375px the detail line needs the width more. */
+  .dl-typecard-icon {
+    display: none;
+  }
+}

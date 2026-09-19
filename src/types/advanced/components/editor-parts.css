@@ -1,0 +1,296 @@
+/* Criterion + threshold row internals. */
+
+/* ---- Criterion card ------------------------------------------------------ */
+
+.dl-crit {
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  overflow: hidden;
+}
+
+.dl-crit[data-open="true"] {
+  border-color: var(--ops-header-accent);
+}
+
+.dl-crit-head {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  padding: var(--ops-space-md) var(--ops-space-lg);
+}
+
+.dl-crit-toggle {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-md);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dl-crit-caret {
+  flex: 0 0 auto;
+  color: var(--ops-text-muted);
+  transition: transform 140ms ease;
+}
+
+.dl-crit[data-open="true"] .dl-crit-caret {
+  transform: rotate(90deg);
+}
+
+/* The number is the run order, which is the only thing the index means. */
+.dl-crit-num {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ops-surface-sunken);
+  border: 1px solid var(--ops-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ops-fs-fine);
+  font-weight: 600;
+  color: var(--ops-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-crit-label {
+  font-size: var(--ops-fs-body);
+  font-weight: 600;
+  color: var(--ops-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dl-crit-untitled {
+  color: var(--ops-text-muted);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.dl-crit-head-right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+}
+
+/* Weight as filled dots — readable at a glance without a number to decode,
+   and it scans down the list as a shape. */
+.dl-weight-dots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.dl-weight-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ops-border);
+}
+
+.dl-weight-dot[data-on="true"] {
+  background: var(--ops-header-accent);
+}
+
+.dl-flag-icon[data-kind="dq"] {
+  color: var(--ops-dq-fg);
+}
+
+.dl-flag-icon[data-kind="block"] {
+  color: var(--ops-block-fg);
+}
+
+.dl-crit-summary {
+  padding: 0 var(--ops-space-lg) var(--ops-space-md);
+  padding-left: calc(var(--ops-space-lg) + 22px + var(--ops-space-md) * 2);
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dl-crit-body {
+  padding: var(--ops-space-md) var(--ops-space-lg) var(--ops-space-lg);
+  border-top: 1px solid var(--ops-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-lg);
+}
+
+/* ---- Fields -------------------------------------------------------------- */
+
+.dl-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-field-label {
+  font-size: var(--ops-fs-caption);
+  font-weight: 600;
+  color: var(--ops-text);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ops-space-sm);
+}
+
+.dl-field-hint {
+  font-weight: 400;
+  color: var(--ops-text-muted);
+  font-size: var(--ops-fs-fine);
+}
+
+/* ---- Answer options ------------------------------------------------------ */
+
+.dl-options {
+  list-style: none;
+  margin: 0 0 var(--ops-space-sm);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-option {
+  background: var(--ops-surface-sunken);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius-sm);
+  padding: var(--ops-space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+/* A dealbreaker option is visually distinct in the editor too, so the scale
+   reads correctly while being built, not only during a run. */
+.dl-option[data-dq="true"] {
+  border-color: var(--ops-dq-border);
+  background: var(--ops-dq-bg);
+}
+
+.dl-option-main {
+  display: flex;
+  gap: var(--ops-space-sm);
+}
+
+.dl-option-main .ant-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dl-option-value {
+  flex: 0 0 auto;
+  width: 74px;
+}
+
+.dl-option-flags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ops-space-sm);
+}
+
+.dl-option-order {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+.dl-blocker-note.ant-input-affix-wrapper {
+  background: var(--ops-surface);
+}
+
+/* ---- Thresholds ---------------------------------------------------------- */
+
+.dl-thresholds {
+  list-style: none;
+  margin: 0 0 var(--ops-space-md);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-threshold {
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  padding: var(--ops-space-md) var(--ops-space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-md);
+  flex-wrap: wrap;
+}
+
+.dl-threshold-min {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+}
+
+.dl-threshold-min .ant-input-number {
+  width: 92px;
+}
+
+.dl-threshold-plus {
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+  white-space: nowrap;
+}
+
+.dl-threshold-label {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.dl-threshold-preview {
+  flex: 0 0 auto;
+}
+
+.dl-threshold-warning {
+  font-size: var(--ops-fs-caption);
+  margin: 0 0 var(--ops-space-md);
+  line-height: 1.5;
+}
+
+/* Phone: the threshold row stacks. Cramming a number input, a text input, a
+   three-way segmented control and a pill onto one line at 375px is exactly the
+   squeeze-it-and-hope shape we do not ship. */
+@media (max-width: 767px) {
+  .dl-threshold {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dl-threshold-label {
+    flex: 1 1 auto;
+  }
+
+  .dl-threshold .ant-segmented {
+    align-self: flex-start;
+  }
+
+  .dl-option-order {
+    margin-left: 0;
+  }
+
+  /* The preview pill is redundant on a phone once the row is stacked — the
+     Segmented control directly above already names the tone. */
+  .dl-threshold-preview {
+    display: none;
+  }
+}
