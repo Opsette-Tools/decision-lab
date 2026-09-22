@@ -196,4 +196,278 @@ const rubric = {
   console.log("PASS  all-best answers score 100% with no flags");
 }
 
-console.log("\nAll scoring checks passed.");
+console.log("\nAll advanced scoring checks passed.");
+
+// ============================================================================
+// The `forms` type
+// ============================================================================
+//
+// Same discipline as above: a standalone reimplementation of the rules in
+// src/types/forms/score.ts, so if the two ever disagree one of them is wrong
+// and this run fails loudly.
+//
+// The cases that matter and why:
+//   1. Skipped questions leave BOTH terms alone (shared with advanced).
+//   2. Nothing answered reads as "not started", not 0%.
+//   3. Checkboxes SUM across checked options; their ceiling is the sum of
+//      positives, so a negative option cannot make a perfect score unreachable.
+//   4. A scale interpolates across its RANGE, so its floor is worth zero.
+//   5. scoreInversion changes the displayed number and NEVER the band.
+//   6. Text and section questions are captured but never judged.
+
+function formsMaxPoints(q) {
+  if (q.kind === "text" || q.kind === "section") return 0;
+  if (q.kind === "scale") return q.scale?.maxPoints ?? 0;
+  if (q.kind === "checkboxes") {
+    return q.options.reduce((sum, o) => sum + Math.max(0, o.points ?? 0), 0);
+  }
+  return q.options.reduce((best, o) => Math.max(best, o.points ?? 0), 0);
+}
+
+function formsScalePoints(q, value) {
+  const s = q.scale;
+  if (!s) return 0;
+  const maxPoints = s.maxPoints ?? 0;
+  const span = s.max - s.min;
+  if (span <= 0) return maxPoints;
+  const clamped = Math.min(Math.max(value, s.min), s.max);
+  return ((clamped - s.min) / span) * maxPoints;
+}
+
+function formsAnswered(value) {
+  if (value === undefined || value === null) return false;
+  if (typeof value === "string") return value.trim() !== "";
+  if (Array.isArray(value)) return value.length > 0;
+  return Number.isFinite(value);
+}
+
+function scoreForms(doc, answers) {
+  let points = 0;
+  let maxPoints = 0;
+  let answered = 0;
+  let total = 0;
+
+  for (const q of doc.questions) {
+    if (q.kind === "section") continue; // a divider is never a question
+    total += 1;
+    const value = answers[q.id];
+    if (!formsAnswered(value)) continue; // skipped: excluded from both terms
+    answered += 1;
+    if (q.kind === "text" || !doc.scored) continue; // captured, never judged
+
+    if (q.kind === "scale") {
+      points += formsScalePoints(q, value);
+    } else if (q.kind === "checkboxes") {
+      for (const id of value) {
+        const o = q.options.find((x) => x.id === id);
+        if (o) points += o.points ?? 0;
+      }
+    } else {
+      const o = q.options.find((x) => x.id === value);
+      if (o) points += o.points ?? 0;
+    }
+    maxPoints += formsMaxPoints(q);
+  }
+
+  const percent = !doc.scored || maxPoints === 0 ? null : Math.round((points / maxPoints) * 100);
+  const displayScore = doc.scoreInversion === "remaining" ? maxPoints - points : points;
+  return { points, maxPoints, percent, answered, total, displayScore };
+}
+
+function bandFor(thresholds, percent) {
+  let best = null;
+  for (const t of thresholds) {
+    if (percent >= t.min && (best === null || t.min > best.min)) best = t;
+  }
+  return best;
+}
+
+// ---- Fixture: the real client-intake list, 2026-09-18 ---------------------
+
+const intake = {
+  scored: true,
+  scoreInversion: "earned",
+  thresholds: [
+    { min: 70, label: "Ready to build", tone: "pass" },
+    { min: 40, label: "Needs groundwork", tone: "warn" },
+    { min: 0, label: "Not ready yet", tone: "fail" },
+  ],
+  questions: [
+    { id: "sec1", kind: "section", label: "Logistics", options: [] },
+    {
+      id: "ship",
+      kind: "choice",
+      label: "Where will you ship to?",
+      options: [
+        { id: "ship-us", label: "US only", points: 3 },
+        { id: "ship-eu", label: "Europe only", points: 3 },
+        { id: "ship-ww", label: "Worldwide", points: 2 },
+        { id: "ship-idk", label: "Not sure yet", points: 0 },
+      ],
+    },
+    {
+      id: "pay",
+      kind: "choice",
+      label: "Payment processor set up?",
+      options: [
+        { id: "pay-yes", label: "Yes", points: 3 },
+        { id: "pay-no", label: "No", points: 1 },
+        { id: "pay-idk", label: "Not sure yet", points: 0 },
+      ],
+    },
+    {
+      id: "have",
+      kind: "checkboxes",
+      label: "What do you already have?",
+      options: [
+        { id: "have-domain", label: "A domain", points: 2 },
+        { id: "have-logo", label: "A logo", points: 1 },
+        { id: "have-copy", label: "Written copy", points: 2 },
+        { id: "have-none", label: "None of these", points: -1 },
+      ],
+    },
+    {
+      id: "ready",
+      kind: "scale",
+      label: "How ready are you to launch?",
+      options: [],
+      scale: { min: 1, max: 5, maxPoints: 4 },
+    },
+    { id: "notes", kind: "text", label: "Anything else?", options: [] },
+  ],
+};
+
+// ---- Case 1: nothing answered --------------------------------------------
+
+{
+  const r = scoreForms(intake, {});
+  assert.equal(r.percent, null, "an untouched forms run must be null, never 0%");
+  assert.equal(r.answered, 0);
+  assert.equal(r.total, 5, "the section is not a question; the other five are");
+  console.log("PASS  forms: nothing answered reads as not-started, not 0%");
+}
+
+// ---- Case 2: skipped questions are excluded from both terms --------------
+
+{
+  // Answer only the shipping question, at its best value.
+  const r = scoreForms(intake, { ship: "ship-us" });
+  assert.equal(r.points, 3);
+  assert.equal(r.maxPoints, 3, "ceiling is the best single option, not the sum");
+  assert.equal(r.percent, 100, "one perfect answer with the rest skipped is 100%");
+  assert.equal(r.answered, 1);
+  console.log("PASS  forms: skipped questions excluded from numerator AND denominator");
+}
+
+{
+  // Add a zero-point answer. It must pull the percentage down, not be skipped.
+  const r = scoreForms(intake, { ship: "ship-us", pay: "pay-idk" });
+  assert.equal(r.points, 3, "the zero-point option adds nothing");
+  assert.equal(r.maxPoints, 6, "but its ceiling still counts - it WAS answered");
+  assert.equal(r.percent, 50);
+  console.log("PASS  forms: a zero-point answer scores 0 but still counts toward the ceiling");
+}
+
+// ---- Case 3: checkboxes sum, and their ceiling skips negatives ------------
+
+{
+  const q = intake.questions.find((x) => x.id === "have");
+  assert.equal(formsMaxPoints(q), 5, "2 + 1 + 2; the -1 option is NOT in the ceiling");
+
+  const r = scoreForms(intake, { have: ["have-domain", "have-copy"] });
+  assert.equal(r.points, 4, "points sum across every checked option");
+  assert.equal(r.maxPoints, 5);
+  assert.equal(r.percent, 80);
+  console.log("PASS  forms: checkbox points sum; ceiling is the sum of POSITIVE options");
+}
+
+{
+  // A negative option is a real penalty, and must be able to drive a question
+  // below zero without breaking the ceiling.
+  const r = scoreForms(intake, { have: ["have-none"] });
+  assert.equal(r.points, -1);
+  assert.equal(r.maxPoints, 5);
+  console.log("PASS  forms: a negative checkbox option penalizes without inflating the ceiling");
+}
+
+// ---- Case 4: a scale interpolates across its RANGE ------------------------
+
+{
+  const q = intake.questions.find((x) => x.id === "ready");
+  // The scale is 1..5 worth 4 points. Answering 1 is the WORST available
+  // answer, so it must be worth zero - not 4 x (1/5) = 0.8, which is what
+  // dividing by max alone would give.
+  assert.equal(formsScalePoints(q, 1), 0, "the floor of the scale is worth zero");
+  assert.equal(formsScalePoints(q, 3), 2, "the midpoint is worth half");
+  assert.equal(formsScalePoints(q, 5), 4, "the top is worth all of it");
+  // Out-of-range values clamp rather than extrapolating past the ceiling.
+  assert.equal(formsScalePoints(q, 9), 4, "a value above max clamps to max");
+  assert.equal(formsScalePoints(q, 0), 0, "a value below min clamps to min");
+  console.log("PASS  forms: a scale interpolates across its range, so its floor scores 0");
+}
+
+// ---- Case 5: text and sections are captured but never judged -------------
+
+{
+  const r = scoreForms(intake, { notes: "They seemed rushed but serious." });
+  assert.equal(r.answered, 1, "the text answer counts as answered");
+  assert.equal(r.maxPoints, 0, "and contributes nothing to the ceiling");
+  assert.equal(r.percent, null, "so the run is still unscored");
+  console.log("PASS  forms: text is captured, never judged");
+}
+
+// ---- Case 6: inversion moves the display, NEVER the band ------------------
+
+{
+  const answers = { ship: "ship-idk", pay: "pay-no", have: ["have-none"] };
+
+  const earned = scoreForms(intake, answers);
+  const remaining = scoreForms({ ...intake, scoreInversion: "remaining" }, answers);
+
+  // points: 0 + 1 + (-1) = 0. ceiling: 3 + 3 + 5 = 11.
+  assert.equal(earned.points, 0);
+  assert.equal(earned.maxPoints, 11);
+  assert.equal(earned.displayScore, 0, "earned shows the raw score");
+  assert.equal(remaining.displayScore, 11, "remaining shows possible - raw");
+
+  // The critical rule: the two must land in the SAME band, because the band is
+  // matched on the raw percent. If inversion could re-bucket a run, toggling a
+  // display setting would silently rewrite every past verdict.
+  assert.equal(earned.percent, remaining.percent, "inversion must not change the percent");
+  const bandA = bandFor(intake.thresholds, earned.percent);
+  const bandB = bandFor(intake.thresholds, remaining.percent);
+  assert.equal(bandA.label, bandB.label, "inversion must never re-bucket a run");
+  assert.equal(bandA.label, "Not ready yet");
+  console.log("PASS  forms: inversion changes the displayed number, never the band");
+}
+
+// ---- Case 7: scoring switched off - a checklist, not a quiz ---------------
+
+{
+  const checklist = { ...intake, scored: false };
+  const r = scoreForms(checklist, { ship: "ship-us", pay: "pay-yes" });
+  assert.equal(r.percent, null, "an unscored doc never produces a percentage");
+  assert.equal(r.answered, 2, "but it still tracks what has been answered");
+  assert.equal(r.maxPoints, 0);
+  console.log("PASS  forms: scoring off records answers without judging them");
+}
+
+// ---- Case 8: a full, realistic run ---------------------------------------
+
+{
+  const r = scoreForms(intake, {
+    ship: "ship-us",             // 3 of 3
+    pay: "pay-no",               // 1 of 3
+    have: ["have-domain"],       // 2 of 5
+    ready: 4,                    // (4-1)/(5-1) x 4 = 3 of 4
+    notes: "Follow up Tuesday.", // captured, unscored
+  });
+  assert.equal(r.points, 9);
+  assert.equal(r.maxPoints, 15);
+  assert.equal(r.percent, 60);
+  assert.equal(r.answered, 5);
+  assert.equal(bandFor(intake.thresholds, r.percent).label, "Needs groundwork");
+  console.log("PASS  forms: a full intake run scores 60% and lands in the middle band");
+}
+
+console.log("\nAll forms scoring checks passed.");

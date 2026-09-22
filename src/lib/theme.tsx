@@ -71,6 +71,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
               "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
           },
           components: {
+            // Horizontal padding only — heights stay on the theme's control
+            // tokens so tap targets are unchanged. AntD's defaults here are
+            // 15px (LG) and 7px; the LG buttons are the bulky ones, so that is
+            // where the real cut is.
+            Button: {
+              paddingInlineLG: 10,
+              paddingInline: 8,
+              fontWeight: 550,
+              // AntD drops a shadow under PRIMARY buttons only, so a primary
+              // sitting next to a default reads taller and slightly
+              // misaligned even though both are the same height. Killing all
+              // three keeps a row of buttons on one visual baseline — and the
+              // shadow is most of what made them look puffy.
+              primaryShadow: "none",
+              defaultShadow: "none",
+              dangerShadow: "none",
+            },
             Table: mode === "dark" ? undefined : { headerBg: "#f9fafb", headerColor: "#374151" },
             // Selected dropdown row: a light tint of the brand green instead of
             // AntD's default flat gray fill.

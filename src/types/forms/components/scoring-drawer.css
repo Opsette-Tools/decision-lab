@@ -1,0 +1,140 @@
+/* The scoring drawer: bulk actions and the settings no single card can own. */
+
+.dl-sd-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ops-space-lg);
+  padding-bottom: var(--ops-space-lg);
+  border-bottom: 1px solid var(--ops-border);
+}
+
+.dl-sd-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-xs);
+  min-width: 0;
+}
+
+.dl-sd-label {
+  font-size: var(--ops-fs-body);
+  font-weight: 600;
+  color: var(--ops-text);
+}
+
+.dl-sd-hint {
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ---- The running total --------------------------------------------------- */
+
+.dl-sd-total {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ops-space-sm);
+  padding: var(--ops-space-lg) 0;
+}
+
+.dl-sd-total-num {
+  font-size: var(--ops-fs-h1);
+  font-weight: 800;
+  letter-spacing: var(--ops-tracking-tight);
+  color: var(--ops-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dl-sd-total-label {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+}
+
+/* ---- Sections ------------------------------------------------------------ */
+
+.dl-sd-section {
+  margin-top: var(--ops-space-xl);
+}
+
+.dl-sd-heading {
+  font-size: var(--ops-fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ops-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ops-text-muted);
+  margin: 0 0 var(--ops-space-sm);
+}
+
+.dl-sd-section-hint {
+  margin-bottom: var(--ops-space-md);
+}
+
+.dl-sd-bulk {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ops-space-sm);
+}
+
+/* Bulk buttons go full width on a phone rather than wrapping into a ragged
+   two-and-a-half-per-row shape. */
+@media (max-width: 599px) {
+  .dl-sd-bulk .ant-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---- Every scored question ----------------------------------------------- */
+
+.dl-sd-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dl-sd-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ops-space-md);
+  padding: var(--ops-space-sm) 0;
+  border-bottom: 1px solid var(--ops-border);
+  font-size: var(--ops-fs-caption);
+}
+
+.dl-sd-item:last-child {
+  border-bottom: 0;
+}
+
+.dl-sd-item-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ops-text);
+}
+
+.dl-sd-item-points {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--ops-text-muted);
+}
+
+/* ---- Fields -------------------------------------------------------------- */
+
+.dl-sd-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+  margin-bottom: var(--ops-space-lg);
+}
+
+/* The bands editor is borrowed from `advanced`; inside a drawer it needs no
+   top margin of its own. */
+.dl-scoredrawer .dl-section {
+  margin-top: var(--ops-space-xl);
+}

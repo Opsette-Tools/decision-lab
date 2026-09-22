@@ -1,0 +1,307 @@
+/* Run-mode question rows and answer controls for the `forms` type. */
+
+.dl-frow {
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius-lg);
+  padding: var(--ops-card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+  transition: border-color 140ms ease;
+}
+
+/* A required question that blocked a finish attempt says so on the row, not
+   only in a toast that vanishes before it can be acted on. */
+.dl-frow[data-missing="true"] {
+  border-color: var(--ops-fail-border);
+  box-shadow: inset 3px 0 0 var(--ops-fail-fg);
+}
+
+.dl-frow-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ops-space-md);
+}
+
+.dl-frow-num {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ops-surface-sunken);
+  border: 1px solid var(--ops-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ops-fs-caption);
+  font-weight: 700;
+  color: var(--ops-text-muted);
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+.dl-frow[data-answered="true"] .dl-frow-num {
+  background: var(--ops-header-accent);
+  border-color: var(--ops-header-accent);
+  color: #fff;
+}
+
+.dl-frow-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The question is the largest thing in the row — it is what gets read aloud. */
+.dl-frow-label {
+  font-size: var(--ops-fs-criterion);
+  font-weight: 650;
+  letter-spacing: var(--ops-tracking-tight);
+  line-height: 1.3;
+  margin: 0;
+  color: var(--ops-text);
+}
+
+.dl-frow-required {
+  color: var(--ops-fail-fg);
+  margin-left: var(--ops-space-xs);
+}
+
+.dl-frow-desc {
+  margin: var(--ops-space-xs) 0 0;
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  line-height: 1.45;
+}
+
+.dl-frow-clear {
+  flex: 0 0 auto;
+  color: var(--ops-text-muted);
+}
+
+.dl-frow-missing {
+  margin: 0;
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-fail-fg);
+  font-weight: 600;
+}
+
+/* ---- Sections ------------------------------------------------------------ */
+
+/* A real break in the run, not another card — this is the cheap way to give an
+   eighteen-question list some structure. */
+.dl-frow-section {
+  padding-top: var(--ops-space-lg);
+  border-bottom: 1px solid var(--ops-border);
+  padding-bottom: var(--ops-space-sm);
+}
+
+.dl-frow-section-title {
+  margin: 0;
+  font-size: var(--ops-fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ops-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ops-text-muted);
+}
+
+.dl-frow-section-desc {
+  margin: var(--ops-space-xs) 0 0;
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  line-height: 1.45;
+}
+
+/* ---- Answer buttons ------------------------------------------------------ */
+
+/* One option per line. These are real phrases of uneven length, and a fixed
+   grid would either truncate them or leave dead space. */
+.dl-frow-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-fanswer {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-md);
+  /* 44px minimum — a real thumb target, tapped mid-conversation. */
+  min-height: 44px;
+  padding: var(--ops-space-sm) var(--ops-space-md);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  background: var(--ops-surface-sunken);
+  color: var(--ops-text);
+  font: inherit;
+  font-size: var(--ops-fs-body);
+  font-weight: 550;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.dl-fanswer:hover:not(:disabled) {
+  border-color: var(--ops-header-accent);
+}
+
+.dl-fanswer:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.dl-fanswer:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* Selected: solid fill. From across a desk the chosen answer has to be
+   unmistakable — an outline is not enough. */
+.dl-fanswer[data-selected="true"] {
+  background: var(--ops-green);
+  border-color: var(--ops-green);
+  color: #fff;
+}
+
+html.dark .dl-fanswer[data-selected="true"],
+html[data-theme="dark"] .dl-fanswer[data-selected="true"] {
+  background: var(--ops-header-accent);
+  border-color: var(--ops-header-accent);
+  color: #14110c;
+}
+
+/* The mark echoes the control's meaning: a circle takes one answer, a square
+   takes several. It is the difference between the two kinds at a glance. */
+.dl-fanswer-mark {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--ops-border);
+  position: relative;
+}
+
+.dl-fanswer-mark[data-kind="choice"] {
+  border-radius: 50%;
+}
+
+.dl-fanswer-mark[data-kind="checkboxes"] {
+  border-radius: 4px;
+}
+
+.dl-fanswer[data-selected="true"] .dl-fanswer-mark {
+  border-color: currentColor;
+  background: currentColor;
+}
+
+.dl-fanswer[data-selected="true"] .dl-fanswer-mark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 4px;
+  height: 8px;
+  border: solid var(--ops-green);
+  border-width: 0 2px 2px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+html.dark .dl-fanswer[data-selected="true"] .dl-fanswer-mark::after,
+html[data-theme="dark"] .dl-fanswer[data-selected="true"] .dl-fanswer-mark::after {
+  border-color: #14110c;
+}
+
+.dl-fanswer-label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dl-frow-select {
+  width: 100%;
+}
+
+/* ---- Linear scale -------------------------------------------------------- */
+
+.dl-frow-scale {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-frow-scale-points {
+  display: flex;
+  gap: var(--ops-space-sm);
+}
+
+.dl-fscale {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  background: var(--ops-surface-sunken);
+  color: var(--ops-text);
+  font: inherit;
+  font-size: var(--ops-fs-body);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.dl-fscale:hover:not(:disabled) {
+  border-color: var(--ops-header-accent);
+}
+
+.dl-fscale[data-selected="true"] {
+  background: var(--ops-green);
+  border-color: var(--ops-green);
+  color: #fff;
+}
+
+html.dark .dl-fscale[data-selected="true"],
+html[data-theme="dark"] .dl-fscale[data-selected="true"] {
+  background: var(--ops-header-accent);
+  border-color: var(--ops-header-accent);
+  color: #14110c;
+}
+
+.dl-fscale:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* The end labels sit under the ends they describe, which is the only placement
+   that explains what a bare row of numbers means. */
+.dl-frow-scale-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ops-space-md);
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+}
+
+/* ---- Phone --------------------------------------------------------------- */
+
+@media (max-width: 599px) {
+  .dl-fanswer {
+    min-height: 48px;
+  }
+
+  /* A 1..10 scale cannot fit ten 44px targets across 375px. Below that width
+     the row scrolls horizontally rather than shrinking every point into
+     something unhittable — a deliberate choice, not a squeeze. */
+  .dl-frow-scale-points {
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: var(--ops-space-xs);
+  }
+
+  .dl-frow-scale-points::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dl-fscale {
+    flex: 0 0 auto;
+    min-width: 48px;
+  }
+}

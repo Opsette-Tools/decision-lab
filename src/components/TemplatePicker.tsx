@@ -1,6 +1,7 @@
 import { Button, Modal } from "antd";
 import { scorecardsRepo } from "@/db/scorecardsRepo";
-import { ADVANCED_TEMPLATES, instantiate } from "@/types/advanced/templates";
+import { ADVANCED_TEMPLATES, instantiate as instantiateAdvanced } from "@/types/advanced/templates";
+import { FORMS_TEMPLATES, instantiate as instantiateForms } from "@/types/forms/templates";
 import { typeInfo } from "@/types/registry";
 import type { ScorecardType } from "@/db/types";
 import "./template-picker.css";
@@ -13,8 +14,8 @@ import "./template-picker.css";
  * dropping straight into an empty editor, and "start blank" is the deliberate
  * choice rather than the default.
  *
- * Only `advanced` has templates today. A type with none goes straight to a
- * blank scorecard instead of showing an empty modal.
+ * A type with no templates goes straight to a blank scorecard instead of
+ * showing an empty modal.
  */
 export function TemplatePicker({
   type,
@@ -32,14 +33,28 @@ export function TemplatePicker({
   }
 
   async function createFromTemplate(key: string) {
-    const template = ADVANCED_TEMPLATES.find((t) => t.key === key);
-    if (!template) return;
-    const { name, content } = instantiate(template);
-    const created = await scorecardsRepo.create({ type: "advanced", name, content });
-    onCreated(created.id);
+    // Each type instantiates its own templates — the shapes are unrelated, and
+    // the picker only ever needs a key, a name and a blurb from either.
+    if (type === "advanced") {
+      const template = ADVANCED_TEMPLATES.find((t) => t.key === key);
+      if (!template) return;
+      const { name, content } = instantiateAdvanced(template);
+      const created = await scorecardsRepo.create({ type: "advanced", name, content });
+      onCreated(created.id);
+      return;
+    }
+    if (type === "forms") {
+      const template = FORMS_TEMPLATES.find((t) => t.key === key);
+      if (!template) return;
+      const { name, content } = instantiateForms(template);
+      const created = await scorecardsRepo.create({ type: "forms", name, content });
+      onCreated(created.id);
+    }
   }
 
-  const templates = type === "advanced" ? ADVANCED_TEMPLATES : [];
+  /** Just the three fields the picker renders, so the two shapes unify here. */
+  const templates: Array<{ key: string; name: string; blurb: string }> =
+    type === "advanced" ? ADVANCED_TEMPLATES : type === "forms" ? FORMS_TEMPLATES : [];
 
   // A type with no templates has nothing to choose between — skip the modal
   // rather than showing an empty one with a single "start blank" button.

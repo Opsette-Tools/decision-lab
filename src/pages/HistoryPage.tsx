@@ -3,7 +3,7 @@ import { Button, Dropdown, Empty, Modal, Segmented, Spin, message } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { runsRepo } from "@/db/runsRepo";
-import { scoreSavedRun } from "@/types/advanced/score";
+import { summarizeRun } from "@/lib/runSummary";
 import { formatDateTime, pluralize } from "@/lib/format";
 import { BlockerCountPill, StatePill } from "@/types/advanced/verdict/VerdictPanel";
 import type { Run } from "@/db/types";
@@ -128,9 +128,9 @@ export default function HistoryPage() {
 
               <ul className="dl-list">
                 {group.runs.map((run) => {
-                  // Null for a type whose scoring isn't built yet — the row
-                  // still lists, it just shows no verdict rather than crashing.
-                  const result = scoreSavedRun(run);
+                  // Null for a type with no engine — the row still lists, it
+                  // just shows no verdict rather than crashing.
+                  const result = summarizeRun(run);
                   const open = run.completedAt === undefined;
                   return (
                     <li key={run.id} className="dl-row">
@@ -154,14 +154,10 @@ export default function HistoryPage() {
                         {result && (
                           <>
                             <span className="dl-history-score" data-state={result.state}>
-                              {result.disqualifiedBy
-                                ? "No"
-                                : result.percent === null
-                                  ? "—"
-                                  : `${result.percent}%`}
+                              {result.scoreText}
                             </span>
                             <StatePill state={result.state} label={result.stateLabel} />
-                            <BlockerCountPill count={result.blockers.length} />
+                            <BlockerCountPill count={result.blockerCount} />
                           </>
                         )}
                         {open && <span className="dl-history-open">In progress</span>}

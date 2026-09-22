@@ -1,35 +1,9 @@
-/* Home. Type-led opening, then real data. No hero-plus-three-cards. */
+/* Home. Goes straight to the scorecards — no marketing hero. */
 
 .dl-home {
   display: flex;
   flex-direction: column;
   gap: var(--ops-space-2xl);
-}
-
-.dl-home-intro {
-  /* Left-aligned and measure-constrained rather than centered — a centered
-     headline over a centered subtitle over two buttons is the exact generic
-     hero shape the family standard rules out. */
-  max-width: 34ch;
-}
-
-/* The statement carries the page. Bigger than the page-title token, tight
-   tracking, set on two deliberate lines via a <br>. */
-.dl-home-title {
-  font-size: clamp(34px, 8.5vw, 56px);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.02;
-  margin: 0;
-  color: var(--ops-text);
-}
-
-.dl-home-lede {
-  max-width: 56ch;
-  margin: var(--ops-space-lg) 0 0;
-  font-size: var(--ops-fs-sub);
-  line-height: 1.55;
-  color: var(--ops-text-muted);
 }
 
 .dl-home-section {

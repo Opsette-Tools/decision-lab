@@ -38,7 +38,7 @@ export const SCORECARD_TYPES: ScorecardTypeInfo[] = [
     detail:
       "Pick a question type for each line — multiple choice, checkboxes, a dropdown, a 1-5 scale, or plain text. Add points to turn it into a scorecard, or leave them off and use it as a structured checklist.",
     icon: <FormOutlined />,
-    ready: false,
+    ready: true,
     emptyContent: () => ({ type: "forms", doc: structuredClone(emptyFormsDoc) }),
   },
   {

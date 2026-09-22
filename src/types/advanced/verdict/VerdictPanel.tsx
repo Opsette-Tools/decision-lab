@@ -45,7 +45,7 @@ export function VerdictPanel({ result }: { result: ScoreResult }) {
           </span>
         )}
         {answeredCount < totalCount && !disqualifiedBy && (
-          <span>Skipped questions don't count against you</span>
+          <span>Skipped questions don't count against the score</span>
         )}
       </div>
 

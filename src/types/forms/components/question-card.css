@@ -1,0 +1,374 @@
+/**
+ * The morphing question card.
+ *
+ * One frame, six middle sections. Everything here resolves through a token in
+ * styles/tokens.css — no literal sizes, so the card scales with the rest of the
+ * app rather than drifting from it.
+ */
+
+.dl-fq {
+  position: relative;
+  background: var(--ops-surface);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius-lg);
+  padding: var(--ops-card-pad);
+  padding-top: var(--ops-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-md);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.dl-fq:focus-within {
+  border-color: var(--ops-header-accent);
+  box-shadow: inset 3px 0 0 var(--ops-header-accent);
+}
+
+/* A section is a divider, not a question — it reads as a heading in the list
+   rather than as one more card with an answer set. */
+.dl-fq[data-section="true"] {
+  background: var(--ops-surface-sunken);
+  border-style: dashed;
+}
+
+/* ---- Head: question text left, type picker right ------------------------- */
+
+.dl-fq-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ops-space-md);
+}
+
+.dl-fq-head-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+}
+
+.dl-fq-num {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ops-surface-sunken);
+  border: 1px solid var(--ops-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ops-fs-fine);
+  font-weight: 600;
+  color: var(--ops-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The question text is the largest thing on the card and always visible. It is
+   what gets read aloud, so it gets the weight. */
+.dl-fq-label.ant-input {
+  font-size: var(--ops-fs-criterion);
+  font-weight: 650;
+  letter-spacing: var(--ops-tracking-tight);
+  line-height: 1.3;
+  color: var(--ops-text);
+  padding: 0;
+}
+
+.dl-fq[data-section="true"] .dl-fq-label.ant-input {
+  text-transform: uppercase;
+  letter-spacing: var(--ops-tracking-wide);
+  font-size: var(--ops-fs-caption);
+  font-weight: 700;
+  color: var(--ops-text-muted);
+}
+
+.dl-fq-kind {
+  flex: 0 0 auto;
+  min-width: 168px;
+}
+
+.dl-fq-desc.ant-input {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  padding: 0;
+  margin-top: calc(var(--ops-space-sm) * -1);
+}
+
+/* ---- Middle: the part that swaps ---------------------------------------- */
+
+.dl-fq-middle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+/* ---- Options (choice / checkboxes / dropdown) ---------------------------- */
+
+.dl-fq-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* One compact ROW per option — a label, its points, and delete. Deliberately
+   not a bordered panel per option: eighteen questions of panelled options is
+   the wall this type exists to avoid. */
+.dl-fq-option {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  padding-block: 2px;
+}
+
+/* Previews the control the run will show, so the card reads as the thing it
+   builds: a circle for one answer, a square for several, a number for a
+   dropdown. */
+.dl-fq-marker {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--ops-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+}
+
+.dl-fq-marker[data-kind="choice"] {
+  border-radius: 50%;
+}
+
+.dl-fq-marker[data-kind="checkboxes"] {
+  border-radius: 3px;
+}
+
+.dl-fq-marker[data-kind="dropdown"] {
+  border: 0;
+  justify-content: flex-start;
+  font-variant-numeric: tabular-nums;
+}
+
+.dl-fq-option-input.ant-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-inline: var(--ops-space-xs);
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+}
+
+.dl-fq-option-input.ant-input:hover,
+.dl-fq-option-input.ant-input:focus {
+  border-bottom-color: var(--ops-border);
+}
+
+.dl-fq-option-points.ant-input-number {
+  flex: 0 0 auto;
+  width: 68px;
+}
+
+.dl-fq-option-actions {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+.dl-fq-option-add {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  padding-left: calc(16px + var(--ops-space-sm));
+}
+
+/* ---- Paste a list -------------------------------------------------------- */
+
+.dl-fq-paste {
+  background: var(--ops-surface-sunken);
+  border: 1px solid var(--ops-border);
+  border-radius: var(--ops-radius);
+  padding: var(--ops-space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-sm);
+}
+
+.dl-fq-paste-hint {
+  margin: 0;
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+}
+
+.dl-fq-paste-actions {
+  display: flex;
+  gap: var(--ops-space-sm);
+}
+
+/* ---- Scale --------------------------------------------------------------- */
+
+.dl-fq-scale-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ops-space-md);
+  align-items: flex-end;
+}
+
+.dl-fq-inline-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-space-xs);
+}
+
+.dl-fq-grow {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.dl-fq-inline-label {
+  font-size: var(--ops-fs-fine);
+  font-weight: 600;
+  color: var(--ops-text-muted);
+}
+
+.dl-fq-scale-note {
+  margin: 0;
+  font-size: var(--ops-fs-fine);
+  color: var(--ops-text-muted);
+  line-height: 1.45;
+}
+
+/* ---- Short answer -------------------------------------------------------- */
+
+/* A dead preview of the input the run will show, so the card still reads as
+   the thing it is building rather than as an empty gap. */
+.dl-fq-text-preview {
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  border-bottom: 1px dashed var(--ops-border);
+  padding-bottom: var(--ops-space-sm);
+  max-width: 280px;
+}
+
+/* ---- Footer -------------------------------------------------------------- */
+
+.dl-fq-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ops-space-md);
+  flex-wrap: wrap;
+  border-top: 1px solid var(--ops-border);
+  padding-top: var(--ops-space-sm);
+  margin-top: var(--ops-space-xs);
+}
+
+.dl-fq-foot-left,
+.dl-fq-foot-right {
+  display: flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+}
+
+/* The Answer key reveal. Closed, a question is just a question — this is the
+   progressive disclosure that keeps a scored card as light as an unscored one. */
+.dl-fq-answerkey {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  border: 0;
+  background: transparent;
+  padding: var(--ops-space-xs) 0;
+  font: inherit;
+  font-size: var(--ops-fs-caption);
+  font-weight: 600;
+  color: var(--ops-text-muted);
+  cursor: pointer;
+}
+
+.dl-fq-answerkey:hover {
+  color: var(--ops-header-accent);
+}
+
+.dl-fq-answerkey-box {
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid var(--ops-border);
+  border-radius: 3px;
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.dl-fq-answerkey-box[data-on="true"] {
+  background: var(--ops-header-accent);
+  border-color: var(--ops-header-accent);
+}
+
+.dl-fq-answerkey-box[data-on="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+/* One number, never a slider. No product surveyed uses a slider for points. */
+.dl-fq-points {
+  font-variant-numeric: tabular-nums;
+  color: var(--ops-text);
+  font-weight: 700;
+}
+
+.dl-fq-required {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ops-space-sm);
+  font-size: var(--ops-fs-caption);
+  color: var(--ops-text-muted);
+  white-space: nowrap;
+}
+
+/* ---- Phone --------------------------------------------------------------- */
+
+/* Deliberate mobile choices, not a squeeze: the type picker drops to its own
+   full-width line (a 168px Select beside a question title at 375px would
+   crush both), and the footer's two halves stack so neither wraps mid-control. */
+@media (max-width: 599px) {
+  .dl-fq-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ops-space-sm);
+  }
+
+  .dl-fq-kind {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .dl-fq-foot {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--ops-space-sm);
+  }
+
+  .dl-fq-foot-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* The per-option up/down arrows go away on a phone: three icon buttons plus
+     a label plus a points field cannot share a 375px row without every one of
+     them becoming unhittable. Reordering options stays available on a larger
+     screen, and deleting — the one that matters mid-edit — stays here. */
+  .dl-fq-option-actions .ant-btn:not(.ant-btn-dangerous) {
+    display: none;
+  }
+
+  .dl-fq-option-points.ant-input-number {
+    width: 60px;
+  }
+}

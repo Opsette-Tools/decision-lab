@@ -3,6 +3,7 @@ import { Button, Spin } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { runsRepo } from "@/db/runsRepo";
 import AdvancedRun from "@/types/advanced/AdvancedRun";
+import FormsRun from "@/types/forms/FormsRun";
 import type { ScorecardType } from "@/db/types";
 
 /**
@@ -65,21 +66,6 @@ export default function RunRoute() {
     case "advanced":
       return <AdvancedRun />;
     case "forms":
-      return (
-        <div>
-          <p className="dl-eyebrow">Run</p>
-          <h1 className="dl-h1">Not built yet</h1>
-          <p className="dl-muted" style={{ marginTop: "var(--ops-space-md)" }}>
-            Questionnaire runs are still to come.
-          </p>
-          <Button
-            type="primary"
-            style={{ marginTop: "var(--ops-space-lg)" }}
-            onClick={() => navigate("/history")}
-          >
-            Back to run history
-          </Button>
-        </div>
-      );
+      return <FormsRun />;
   }
 }

@@ -221,7 +221,7 @@ export default function AdvancedEditor() {
           />
         </div>
         <Button type="primary" size="large" icon={<PlayCircleOutlined />} onClick={() => void startRun()}>
-          Run it
+          Run
         </Button>
       </div>
 

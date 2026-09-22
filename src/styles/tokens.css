@@ -93,7 +93,10 @@
   --ops-radius-lg: 12px;
 
   /* ---- Card interior padding (breathing room inside cards) --------------- */
-  --ops-card-pad: clamp(16px, 5vw, 24px);
+  /* Tightened 24px -> 18px at the desktop end. A working tool reads better
+     dense; 24px inside a card that already sits in a padded page gutter was
+     what made these feel bulky. The phone end stays generous. */
+  --ops-card-pad: clamp(16px, 5vw, 18px);
 
   /* ---- Surfaces ---------------------------------------------------------- */
   --ops-surface: #ffffff;

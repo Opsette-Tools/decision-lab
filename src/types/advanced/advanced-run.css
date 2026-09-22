@@ -1,7 +1,35 @@
 /* Run mode layout. */
 
+/**
+ * Page header: title block on the left, actions on the right.
+ *
+ * BUTTON HIERARCHY, applied across every page header in the app so the same
+ * job always takes the same shape:
+ *   · primary action   — filled, size="large"   (Run, Finish run)
+ *   · secondary action — outlined, size="large" (Edit scorecard, points)
+ *   · tertiary         — type="text"            (Add a section, Paste a list)
+ * All three are real AntD Buttons, so their heights come from the theme's
+ * controlHeightLG rather than from per-page CSS that drifts apart.
+ */
 .dl-run-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ops-space-lg);
+  flex-wrap: wrap;
   margin-bottom: var(--ops-space-xl);
+}
+
+.dl-run-head-text {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+/* Phone: the action goes full width under the title rather than crowding it. */
+@media (max-width: 599px) {
+  .dl-run-head .ant-btn {
+    width: 100%;
+  }
 }
 
 .dl-run-head-text .dl-eyebrow {

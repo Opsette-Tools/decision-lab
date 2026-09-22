@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { runsRepo } from "@/db/runsRepo";
 import { scorecardsRepo } from "@/db/scorecardsRepo";
 import { useScorecards } from "@/lib/useScorecards";
-import { scoreSavedRun } from "@/types/advanced/score";
+import { summarizeRun } from "@/lib/runSummary";
 import { formatDateTime } from "@/lib/format";
 import { TypeChooser } from "@/components/TypeChooser";
 import { TemplatePicker } from "@/components/TemplatePicker";
@@ -58,20 +58,6 @@ export default function HomePage() {
 
   return (
     <div className="dl-home">
-      <header className="dl-home-intro">
-        <p className="dl-eyebrow">Decision Lab</p>
-        <h1 className="dl-home-title">
-          Decide the same way
-          <br />
-          every time.
-        </h1>
-        <p className="dl-home-lede">
-          Write down what actually matters, how much each thing counts, and what ends the conversation on
-          the spot. Then run it when the decision is in front of you, instead of working it out again
-          under pressure.
-        </p>
-      </header>
-
       {loading ? (
         <div className="dl-loading">
           <Spin />
@@ -138,7 +124,7 @@ export default function HomePage() {
 
           <ul className="dl-list">
             {recent.map((run) => {
-              const result = scoreSavedRun(run);
+              const result = summarizeRun(run);
               const open = run.completedAt === undefined;
               return (
                 <li key={run.id} className="dl-row">

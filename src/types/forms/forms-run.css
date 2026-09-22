@@ -1,0 +1,23 @@
+/**
+ * Questionnaire run mode.
+ *
+ * The page layout — the two-column grid, the sticky verdict, the phone bar —
+ * is inherited from advanced-run.css, which this file is loaded alongside.
+ * Only what is genuinely different for this type lives here.
+ */
+
+/* The denominator in "3/12" and "9/15" is secondary to the number itself, so it
+   drops back rather than competing with it at verdict size. */
+.dl-fv-of {
+  font-size: var(--ops-fs-sub);
+  font-weight: 600;
+  opacity: 0.6;
+  margin-left: 1px;
+}
+
+/* A section heading is a break in the run list, so it needs room above it that
+   an answer row does not. The first one needs no gap — it would leave a hole
+   between the verdict and the first question. */
+.dl-run-list > li:not(:first-child) > .dl-frow-section {
+  margin-top: var(--ops-space-lg);
+}

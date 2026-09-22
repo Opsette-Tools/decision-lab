@@ -3,6 +3,7 @@ import { Button, Spin } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { scorecardsRepo } from "@/db/scorecardsRepo";
 import AdvancedEditor from "@/types/advanced/AdvancedEditor";
+import FormsEditor from "@/types/forms/FormsEditor";
 import type { ScorecardType } from "@/db/types";
 
 /**
@@ -65,29 +66,6 @@ export default function EditorRoute() {
     case "advanced":
       return <AdvancedEditor />;
     case "forms":
-      // The type exists in the model and the chooser, but its editor is a later
-      // session's work. Creating one is blocked upstream (registry `ready:
-      // false`), so this is only reachable by hand-editing a URL.
-      return <NotBuiltYet name="Questionnaire" />;
+      return <FormsEditor />;
   }
-}
-
-function NotBuiltYet({ name }: { name: string }) {
-  const navigate = useNavigate();
-  return (
-    <div>
-      <p className="dl-eyebrow">Scorecards</p>
-      <h1 className="dl-h1">{name} isn&rsquo;t built yet</h1>
-      <p className="dl-muted" style={{ marginTop: "var(--ops-space-md)", maxWidth: "52ch" }}>
-        The data model is in place, but this type&rsquo;s editor is still to come.
-      </p>
-      <Button
-        type="primary"
-        style={{ marginTop: "var(--ops-space-lg)" }}
-        onClick={() => navigate("/scorecards")}
-      >
-        Back to scorecards
-      </Button>
-    </div>
-  );
 }
